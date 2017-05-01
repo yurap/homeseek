@@ -1,6 +1,5 @@
 [Unit]
 Description=Tornado server running homeseek
-Documentation=man:homeseek(1)
 
 [Service]
 User=ubuntu

@@ -1,0 +1,11 @@
+[Unit]
+Description=Posts loader for homeseek
+
+[Service]
+User=ubuntu
+Group=www-data
+WorkingDirectory=/home/ubuntu/homeseek
+ExecStart=/usr/bin/python load_posts.py
+
+[Install]
+WantedBy=multi-user.target

@@ -12,7 +12,7 @@ from sources.subway_parser import SubwayParser
 from sources.dup_finder import DupFinder
 
 
-if __name__ == '__main__':
+def get_and_insert():
     db = MongoClient(Config.MONGO_URI)[Config.MONGO_DB]
     loader = PostsLoader(Config.DATA_FOLDER, 100)
     rent_parser = RentParser()
@@ -51,6 +51,15 @@ if __name__ == '__main__':
 
         print u'{}\t{}/{}\t{}'.format(datetime.now(), accepted, len(posts), g.name)
 
-
     if len(to_insert) > 0:
         db.posts.insert_many(to_insert)
+
+
+if __name__ == '__main__':
+    while True:
+        try:
+            get_and_insert()
+        except Exception as e:
+            print 'error!', str(e)
+        print '{}\twaiting for 600 seconds ...'.format(datetime.now())
+        sleep(600)
