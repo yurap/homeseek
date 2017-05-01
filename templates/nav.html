@@ -42,7 +42,7 @@ $(document).ready(function(){
         <fieldset style='display:inline; padding:0; margin:0'>
             <label for='distance'>+ соседние на расстоянии</label>
             <input style='display:inline; width: 50px' type="text" min="0" id="distance" name='d' class='price' value='{{filter.distance}}'>
-            <label for='distance'><nobr>(не более {{filter.subway.max_distance}})</nobr></label>
+            <label for='distance'><nobr>(не более {{filter.subway.max_distance}}, включая пересадки)</nobr></label>
         </fieldset>
     </form>
     {% if len(filter.stations) > 0 %}

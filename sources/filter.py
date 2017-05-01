@@ -21,7 +21,7 @@ class Filter(object):
         self.price_max  = self.cut_price(self.overall_max_price if 'price_max' not in data else int(data['price_max']))
         self.price_min  = self.cut_price(self.overall_min_price if 'price_min' not in data else int(data['price_min']))
         self.station_id = 0 if 'station' not in data else int(data['station'])
-        self.distance   = 3 if 'distance' not in data else int(data['distance'])
+        self.distance   = 3 if 'distance' not in data or not data['distance'].isnumeric() else int(data['distance'])
         self.stations   = self.subway.get_stations_by_distance(self.station_id, self.distance)
         self.page       = 1 if 'page' not in data or data['page'] is None else max(int(data['page']), 1)
         self.start      = (self.page - 1) * self.posts_per_page
