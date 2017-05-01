@@ -3,6 +3,10 @@ from helpers import split_to_sentences
 from datetime import datetime
 
 
+def _hash_text(text):
+    return hash(''.join(text.split()))
+
+
 class Post(object):
     # todo: make sure tags&metro are sorted at store time
     def __init__(self, data):
@@ -33,6 +37,18 @@ class Post(object):
 
     def get_sentences(self):
         return split_to_sentences(self.text)
+
+    def get_sentence_hashes(self, sample=0):
+        sents = self.get_sentences()
+        sents = [s for s in sents if len(s.split()) >= 5]
+        if len(sents) == 0:
+            sents = [self.text]
+
+        if sample > 0:
+            sents = random.sample(sents, min(sample, len(sents)))
+
+        return map(_hash_text, sents)
+
 
     def check_is_old(self):
         d = datetime.now() - self.created_time

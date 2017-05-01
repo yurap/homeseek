@@ -2,10 +2,6 @@ from datetime import datetime, timedelta
 from post import Post
 
 
-def _hash_text(text):
-    return hash(''.join(text.split()))
-
-
 class DupFinder(object):
     def __init__(self, db):
         self._db = db
@@ -19,18 +15,15 @@ class DupFinder(object):
         print '{}\tloading {} posts for dup matching ...'.format(datetime.now(), cursor.count())
         for post_data in cursor:
             p = Post(post_data)
-            hashes += map(_hash_text, p.get_random_sentences())
+            hashes += p.get_sentence_hashes(sample=2)
         return set(hashes)
 
     def check_is_ok(self, post):
-        for s in post.get_sentences():
-            if len(s.split()) < 4:
-                continue
-            h = _hash_text(s)
+        for h in post.get_sentence_hashes():
             if h in self._hashes:
                 return False
         return True
 
     def add(self, p):
-        for e in map(_hash_text, p.get_random_sentences()):
-            self._hashes.add(e)
+        for h in p.get_sentence_hashes(sample=2):
+            self._hashes.add(h)
