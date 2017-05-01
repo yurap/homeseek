@@ -49,7 +49,7 @@ def get_and_insert():
             p.set('text', remove_phones(p.text))
             to_insert.append(p.to_json())
 
-        print u'{}\t{}/{}\t{}'.format(datetime.now(), accepted, len(posts), g.name)
+        print u'{}\t{}/{}\t{}'.format(datetime.now(), accepted, len(posts), g.id)
 
     if len(to_insert) > 0:
         db.posts.insert_many(to_insert)
