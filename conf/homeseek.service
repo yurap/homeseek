@@ -1,0 +1,12 @@
+[Unit]
+Description=Tornado server running homeseek
+Documentation=man:homeseek(1)
+
+[Service]
+User=ubuntu
+Group=www-data
+WorkingDirectory=/home/ubuntu/homeseek
+ExecStart=/usr/bin/gunicorn --workers 1 -k tornado --bind unix:myproject.sock index:app
+
+[Install]
+WantedBy=multi-user.target
