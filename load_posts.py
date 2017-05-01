@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import sys
 from pymongo import MongoClient
 from config import Config
 from time import sleep
@@ -49,7 +50,7 @@ def get_and_insert():
             p.set('text', remove_phones(p.text))
             to_insert.append(p.to_json())
 
-        print u'{}\t{}/{}\t{}'.format(datetime.now(), accepted, len(posts), g.id)
+        print >> sys.stderr, u'{}\t{}/{}\t{}'.format(datetime.now(), accepted, len(posts), g.id)
 
     if len(to_insert) > 0:
         db.posts.insert_many(to_insert)
@@ -60,6 +61,6 @@ if __name__ == '__main__':
         try:
             get_and_insert()
         except Exception as e:
-            print 'error!', str(e)
-        print '{}\twaiting for 600 seconds ...'.format(datetime.now())
+            print >> sys.stderr, 'error!', str(e)
+        print >> sys.stderr, '{}\twaiting for 600 seconds ...'.format(datetime.now())
         sleep(600)
