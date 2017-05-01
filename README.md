@@ -10,3 +10,6 @@ http://homeseek.ru -- небольшой парсер соцсетей, ищем
 ## фильтрация
 * логика удаления дублей -- sources/dup_finder.py
 * логика фильтрации -- load_posts.py
+
+## схема московского метро
+* sources/subway_lines.py
