@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<a name='t'></a>
+
+<div>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class='post-description'>
+    {% for message in messages %}
+      <li style='color: red'>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+</div>
+
+<p style='margin: 0'>
+    Вы {% if not filter.is_extended %}не{% endif %} авторизованы.
+</p>
+{% endblock %}

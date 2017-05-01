@@ -1,0 +1,28 @@
+{#
+<div style='position:absolute;min-width:225px;top:0;right:0;margin:10px;color:white;font-family:sans-serif;font-size:13px;text-align:right'>
+    {% if 'facebook_token' in session or 'vk_token' in session %}
+        <a
+            class='login_button'
+            style="background-image:url('/static/{%if 'facebook_token' in session%}fb{%else%}vk{%endif%}_icon.png')"
+        >
+        {%if 'facebook_token' in session%}
+            {{session.facebook_name}}
+        {%else%}
+            {{session.vk_name}}
+        {%endif%}
+        </a><a
+            class='login_button_icon'
+            href='{{url_for('lk')}}#t'
+            style="background-position:2px 3px;background-image:url('/static/i_settings.png')"
+        ></a><a
+            class='login_button_icon'
+            href='{{url_for('logout')}}'
+            style="background-image:url('/static/i_logout.png')"
+        ></a>
+    {% else %}
+        Войти:&nbsp;
+        <a class='login_button_icon' href='{{url_for('vk')}}' style="background-image: url('/static/vk_icon.png')"></a>
+        <a class='login_button_icon' href='{{url_for('fb')}}' style="background-image: url('/static/fb_icon.png')"></a>
+    {% endif %}
+</div>
+#}

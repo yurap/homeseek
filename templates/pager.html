@@ -1,0 +1,28 @@
+{% if len(filter.pages) > 1 %}
+
+<div style='text-align: center; width: 100%'>
+    <ul class="pagination">
+    {% if filter.skip_page(filter.pages[0]) %}
+        <li><a href='{{filter.get_url_for_page(filter.pages[0])}}#results'>{{ filter.pages[0] }}</a></li>
+    {% end %}
+    {% if len(filter.pages) > 1 and filter.skip_page(filter.pages[1]) %}
+        <li><a>...</a></li>
+    {% end %}
+    {% for p in filter.pages %}
+        {% if not filter.skip_page(p) %}
+            {% if p == filter.page %}
+                <li><a class="active">{{ p }}</a></li>
+            {% else %}
+                <li><a href='{{filter.get_url_for_page(p)}}#results'>{{ p }}</a></li>
+            {% end %}
+        {% end %}
+    {% end %}
+    {% if filter.skip_page(filter.pages[-1]) %}
+    {% if len(filter.pages) and filter.skip_page(filter.pages[-2]) %}
+        <li><a>...</a></li>
+    {% end %}
+        <li><a href='{{filter.get_url_for_page(filter.pages[-1])}}#results'>{{ filter.pages[-1] }}</a></li>
+    {% end %}
+    </ul>
+</div>
+{% end %}

@@ -1,0 +1,60 @@
+<script>
+$(document).ready(function(){
+    $('[id^=slider_]').each(function(){
+        var id = this.id.split('_')[1] + '_' + this.id.split('_')[2]
+        console.log(id)
+        slider = $(this).bxSlider({
+            adaptiveHeight: true,
+            infiniteLoop: true,
+            preloadImages: 'all',
+        })
+    })
+});
+</script>
+
+{% for post in filter.posts %}
+<div class="posts" style='border: 1px solid #ddd; padding: 5px 10px; margin-bottom: 10px'>
+    <div class="content-subhead">
+        <nobr><a class="post-category">{{ post.created_time }}</a></nobr>
+        {% for price in post.prices %}
+            <nobr><a class="post-category post-category-pure">{{price}} 000 руб.</a></nobr>
+        {% end %}
+        {% for t in post.subway %}
+            <nobr><a class="post-category post-category-pure">м. {{t}}</a></nobr>
+        {% end %}
+    </div>
+    <section class="post">
+        {% if len(post.attachments) > 0 %}
+        <div style='width: 100%; text-align: center'>
+            <div style='display: none;' id='nav_{{post._id}}' class="bx-pager">
+                {% for i in xrange(len(post.attachments)) %}
+                {% set a = post.attachments[i] %}
+                <a data-slide-index="{{i}}"><img id='small_{{post._id}}' class="attachment fixed_height" src="{{ a }}" /></a>
+                {% end %}
+            </div>
+            <div style="clear: both"></div>
+        </div>
+        <ul id='slider_{{post._id}}' class="bx-slider">
+            {% for a in post.attachments %}
+            <li><img style='height: 100%' src="{{ a }}" /></li>
+            {% end %}
+        </ul>
+        {% end %}
+        <div class="post-description">
+            {% for line in post.text.split('<br>') %}
+                {{line}}<br>
+            {% end %}
+            <a target='_blank' href='{{ post.get_url() }}'><nobr>источник: {{filter.get_group_by_id(post.group_id).name}}</nobr></a>
+        </div>
+    </section>
+</div>
+{% end %}
+{% if len(filter.posts) == 0 %}
+<div class="posts">
+<section class="post">
+<p class='post-description'>
+Ничего не найдено, попробуйте ослабить фильтр.
+</p>
+</section>
+</div>
+{% end %}

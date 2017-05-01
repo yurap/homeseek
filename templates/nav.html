@@ -1,0 +1,59 @@
+<script type='text/javascript'>
+$(document).ready(function(){
+    $("#metro-select").select2({language: "ru"});
+    $('#run_filter').click(function(){
+        $('#filter_form').submit();
+    });
+    $('body').keypress(function (e) {
+        if (e.which == 13) {
+            $('#filter_form').submit();
+            return false;
+        }
+    });
+})
+</script>
+
+<a class='brand-link' href='/'><img src='{{ static_url('logo.png') }}'></a>
+
+<div class='filter'>
+    <form id='filter_form' class="pure-form" method="get" action="/s">
+        <div style='height: 10px'></div>
+        <fieldset style='display:inline; padding:0; margin:0'>
+            <label style='display:inline' for='price_min'>цена от</label>
+            <input style='display:inline' type="text" id="price_min" name='min' class='price' value='{{filter.price_min}}'>
+            <label style='display:inline' for='price_max'>до</label>
+            <input style='display:inline' type="text" id='price_max' name='max' class='price' value='{{filter.price_max}}'>
+            <label style='display:inline' for='price_max'>руб.</label>
+        </fieldset>
+        <div style='height: 10px'></div>
+        <select id='metro-select' value='filter.station_id' name='m' style='max-width:80%'>
+            <option value='0' {% if filter.station_id == 0 %}selected{% end %}>Любое метро</option>
+            {% for line in filter.get_subway_lines() %}
+                <optgroup label='{{ line.name }}'>
+                {% for i in xrange(len(line.stations)) %}
+                {% set station = line.stations[i] %}
+                    <option value="{{ station.id }}" {% if filter.station_id == station.id %}selected{% end %}>{{ station.name }}</option>
+                }
+                {% end %}
+                </optgroup>
+            {% end %}
+        </select>
+        <div style='height: 10px'></div>
+        <fieldset style='display:inline; padding:0; margin:0'>
+            <label for='distance'>+ соседние на расстоянии</label>
+            <input style='display:inline; width: 50px' type="text" min="0" id="distance" name='d' class='price' value='{{filter.distance}}'>
+            <label for='distance'><nobr>(не более {{filter.subway.max_distance}})</nobr></label>
+        </fieldset>
+    </form>
+    {% if len(filter.stations) > 0 %}
+    <div style='padding: 6px'></div>
+    {% end %}
+    <div id='metro_tags'>
+        {% set station_names = sorted(list(set([station.name for station in filter.stations]))) %}
+        {% for station_name in station_names %}<a>{{station_name}}</a>{% end %}
+    </div>
+    <div style='padding: 6px'></div>
+    <div class='tags'>
+        <a class='search-button' id='run_filter'>Найти!</a>
+    </div>
+</div>

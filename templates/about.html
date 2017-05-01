@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<p style='margin-top: 0'>
+Привет.
+</p>
+
+<p>
+Мы автоматически (а потому не без ошибок) собираем и анализируем посты из социальных сетей про сдачу жилья в аренду в Москве: извлекаем цену, метро, фильтруем дубли и спам, и всё это в реальном времени.
+</p>
+
+<p>
+Группы, которые мы анализируем:
+{% set groups = filter.get_groups() %}
+{% for i in xrange(len(groups)) %}
+<a target='_blank' href='{{groups[i].get_url()}}'>{{groups[i].name}}{% if i+1 == len(groups) %}.{% else %},{% end %}</a>&nbsp;
+{% end %}
+</p>
+
+<p>
+Homeseek – небольшой бесплатный сервис, обратная связь от вас очень поможет нам развиться! Пишите <a href='https://www.facebook.com/groups/homeseek/'>в фейсбук</a> :)
+</p>
+
+<div style='padding: 5px'></div>
+{% end %}
