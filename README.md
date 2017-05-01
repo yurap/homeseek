@@ -3,7 +3,7 @@
 
 ## парсеры
 * метро - sources/subway_parser.py
-* цены -sources/price_parser.py
+* цены - sources/price_parser.py
 * пост про сдачу, а не съем/оффтоп - sources/rent_parser.py
 замер качества на data/markup.json -- см. test_parsers.py
 все основаны на регулярках
