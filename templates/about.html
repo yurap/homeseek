@@ -101,7 +101,7 @@ Homeseek – бесплатный сервис для поиска жилья в
 <p><div id="subway_covering" style="width:100%"></div></p>
 
 <p>
-Группы, которые мы анализируем:
+Источники, которые мы анализируем:
 {% set groups = filter.get_groups() %}
 {% for i in xrange(len(groups)) %}
 <a target='_blank' href='{{groups[i].get_url()}}'>{{groups[i].name}}{% if i+1 == len(groups) %}.{% else %},{% end %}</a>&nbsp;
