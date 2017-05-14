@@ -50,7 +50,7 @@ class Post(object):
         return map(_hash_text, sents)
 
     def get_checksum(self):
-        return hash(tuple([self.text] + self.attachments))
+        return hash(''.join([w.strip() for w in self.text.lower().split()]))
 
     def check_is_old(self):
         d = datetime.now() - self.created_time
