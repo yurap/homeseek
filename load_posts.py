@@ -11,6 +11,13 @@ from sources.rent_parser import RentParser
 from sources.price_parser import PriceParser
 from sources.subway_parser import SubwayParser
 from sources.dup_finder import DupFinder
+from sources.post import PostIterator
+from datetime import datetime, timedelta
+
+
+def get_posts_it_from_db(db):
+    time_bound = datetime.now() - timedelta(days=14)
+    return PostIterator(db.posts.find({'created_time': {'$gt': time_bound}}))
 
 
 def get_and_insert():
@@ -19,7 +26,7 @@ def get_and_insert():
     rent_parser = RentParser()
     price_parser = PriceParser()
     subway_parser = SubwayParser()
-    dup_finder = DupFinder(db)
+    dup_finder = DupFinder(get_posts_it_from_db(db))
 
     to_insert = []
     for g in Group.list():
@@ -35,14 +42,13 @@ def get_and_insert():
             if len(prices) == 0 or len(stations) == 0:
                 continue
 
-            if not dup_finder.check_is_ok(p):
-                continue
-
             if p.check_is_old():
                 continue
 
+            if not dup_finder.check_and_add(p):
+                continue
+
             accepted += 1
-            dup_finder.add(p)
             p.set('prices', prices)
             p.set('min_price', prices[0])
             p.set('max_price', prices[-1])

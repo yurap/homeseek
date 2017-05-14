@@ -49,7 +49,21 @@ class Post(object):
 
         return map(_hash_text, sents)
 
+    def get_checksum(self):
+        return hash(tuple([self.text] + self.attachments))
 
     def check_is_old(self):
         d = datetime.now() - self.created_time
         return d.total_seconds() / 3600. / 24 > 14
+
+
+class PostIterator(object):
+    def __init__(self, it):
+        self._it = it
+
+    def __iter__(self):
+        return self
+
+    def next(self):
+        # stops with StopIteration exception
+        return Post(self._it.next())
