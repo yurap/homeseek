@@ -32,7 +32,7 @@ class DupFinder(object):
 
     def _check_by_group_dt(self, p):
         if p.group_id in self._group_to_latest_dt:
-            if self._group_to_latest_dt[p.group_id] > p.created_time:
+            if self._group_to_latest_dt[p.group_id] >= p.created_time:
                 return False
         return True
 
