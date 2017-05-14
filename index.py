@@ -3,7 +3,9 @@ import tornado.web
 from config import Config
 from sources.group import Group
 from sources.filter import Filter
+from sources.stats import Stats
 from sources.helpers import first_or_none
+from sources.post import PostIterator
 from pymongo import MongoClient
 
 
@@ -11,6 +13,7 @@ class AboutHandler(tornado.web.RequestHandler):
     def get(self):
         self.render(
             'about.html',
+            stats=Stats(PostIterator(db.posts.find())),
             filter=Filter(None, {}),
         )
 

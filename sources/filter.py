@@ -37,8 +37,8 @@ class Filter(object):
 
     def _find(self):
         query = {}
-        query['min_price'] = {'$gte': self.price_min / 1000}
-        query['max_price'] = {'$lte': self.price_max / 1000}
+        query['min_price'] = {'$lte': self.price_max / 1000}
+        query['max_price'] = {'$gte': self.price_min / 1000}
         if len(self.stations) > 0:
             query['subway'] = {'$in': [s.name.lower() for s in self.stations]}
         return self.db.posts \

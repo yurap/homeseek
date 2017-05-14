@@ -1,12 +1,75 @@
 {% extends "base.html" %}
 {% block content %}
+<script src="{{ static_url('highcharts.js') }}"></script>
+<script type='text/javascript'>
+$(document).ready(function(){
+    Highcharts.chart('posts_per_day', {
+        credits: {enabled: false},
+        chart: {type: 'column'},
+        title: {text: 'Число объявлений по дням по группам'},
+        plotOptions: {column: {stacking: 'normal',}},
+        xAxis: {type: 'datetime', title: {text: ''}},
+        yAxis: [{title: {text: ''}}],
+        series: [
+            {% set groups = stats.get_groups() %}
+            {% for i in xrange(len(groups)) %}
+            {
+                name: '{{ groups[i].name }}',
+                type: 'column',
+                data: [
+                    {% for dt, total in stats.get_group_posts_per_day(groups[i].id) %}
+                    [Date.UTC({{dt.year}}, {{dt.month - 1}}, {{dt.day}}), {{total}}],
+                    {% end %}
+                ],
+                pointPadding: 0,
+                groupPadding: 0
+            }
+            {% if i + 1 < len(groups) %},{% end %}
+            {% end %}
+        ]
+    });
+
+    Highcharts.chart('prices_distribution', {
+        tooltip: {
+            formatter: function () {
+                return 'объявлений c ценой <b>' + this.x + ' 000</b> рублей: <b>' + this.y + '</b>';
+            }
+        },
+        legend: {enabled: false},
+        credits: {enabled: false},
+        chart: {type: 'column'},
+        title: {text: 'Число объявлений по ценам за 14 дней'},
+        plotOptions: {column: {stacking: 'normal',}},
+        // xAxis: {type: 'datetime', title: {text: ''}},
+        xAxis: [{title: {text: 'тысяч рублей'}}],
+        yAxis: [{title: {text: 'число объявлений'}}],
+        series: [
+            {
+                name: '',
+                type: 'column',
+                data: [
+                    {% for price, total in stats.get_prices() %}
+                    [{{price}}, {{total}}],
+                    {% end %}
+                ],
+                pointPadding: 0,
+                groupPadding: 0
+            }
+        ]
+    });
+})
+</script>
+
 <p style='margin-top: 0'>
 Привет.
 </p>
 
 <p>
-Мы автоматически (а потому не без ошибок) собираем и анализируем посты из социальных сетей про сдачу жилья в аренду в Москве: извлекаем цену, метро, фильтруем дубли и спам, и всё это в реальном времени.
+Мы автоматически собираем и анализируем посты из социальных сетей про сдачу жилья в аренду в Москве: извлекаем цену, метро, фильтруем дубли и спам, и всё это в реальном времени.
 </p>
+
+<p><div id="posts_per_day" style="width:100%"></div></p>
+<p><div id="prices_distribution" style="width:100%"></div></p>
 
 <p>
 Группы, которые мы анализируем:

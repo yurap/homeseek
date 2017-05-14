@@ -13,3 +13,7 @@ http://homeseek.ru -- небольшой парсер соцсетей, ищем
 
 ## схема московского метро
 * sources/subway_lines.py
+
+## useful commands
+sudo systemctl restart homeseek
+sudo systemctl restart homeseek_load

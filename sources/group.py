@@ -23,7 +23,6 @@ class Group(object):
     @staticmethod
     def list():
         return [
-            Group('147261602107510' , u'(fb) thefreedoors', u'thefreedoors'),
             Group('294101960601372' , u'(fb) посредников нет'),
             Group('341762229296973' , u'(fb) abagyr'),
             Group('509679185734909' , u'(fb) flats for friends'),
@@ -38,7 +37,6 @@ class Group(object):
             Group('-50263215'       , u'(вк) аренда7'),
             Group('-62069824'       , u'(вк) rentm'),
             Group('-95396194'       , u'(вк) уютное гнездышко'),
-            Group('-97643480'       , u'(вк) homerenta'),
             Group('-111348472'      , u'(вк) epejitop'),
         ]
 
