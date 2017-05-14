@@ -46,7 +46,6 @@ $(document).ready(function(){
         chart: {type: 'column'},
         title: {text: 'Число объявлений по ценам за 14 дней'},
         plotOptions: {column: {stacking: 'normal',}},
-        // xAxis: {type: 'datetime', title: {text: ''}},
         xAxis: [{title: {text: 'тысяч рублей'}}],
         yAxis: [{title: {text: 'число объявлений'}}],
         series: [
@@ -70,13 +69,10 @@ $(document).ready(function(){
                 return '<b>' + this.series.name + '</b><br>на станции <b>' + get_station_name(this.x) + '</b> объявлений: <b>' + this.y + '</b>';
             }
         },
-        // legend: {enabled: false},
         credits: {enabled: false},
         chart: {type: 'column'},
         title: {text: 'Число объявлений по станциям метро за 14 дней'},
         plotOptions: {column: {stacking: 'normal',}},
-        // xAxis: {type: 'datetime', title: {text: ''}},
-        // xAxis: [{title: {text: 'станции метро'}}],
         xAxis: [{visible: false}],
         yAxis: [{title: {text: 'число объявлений'}}],
         series: [
