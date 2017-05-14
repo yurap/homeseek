@@ -1,6 +1,6 @@
 # coding: utf-8
 from subway_lines import all_subway_lines, all_conjunctions
-
+from collections import defaultdict
 
 class Subway(object):
     max_distance = 6
@@ -10,7 +10,12 @@ class Subway(object):
         self._sid_to_conjunctions = {sid: conj for conj in all_conjunctions for sid in conj}
         self._sid_to_station = {station.id: station for line in self._lines for station in line.stations}
         self._sid_to_neighboors = self._build_sid_to_neighboors()
-        self._name_index = {station.name.lower(): station for line in self._lines for station in line.stations}
+
+        self._name_index = defaultdict(list)
+        for line in self._lines:
+            for station in line.stations:
+                self._name_index[station.name.lower()].append(station)
+        # {station.name.lower(): station for line in self._lines for station in line.stations}
 
     def _build_sid_to_neighboors(self):
         sid_to_neighboors = {}
@@ -31,6 +36,11 @@ class Subway(object):
         if sid in self._sid_to_station:
             return self._sid_to_station[sid]
         return None
+
+    def get_stations_by_name(self, name):
+        if name in self._name_index:
+            return self._name_index[name]
+        return []
 
     def _find_neighboors_ids(self, station_ids):
         answer = set()

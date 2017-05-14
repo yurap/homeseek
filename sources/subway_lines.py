@@ -1,7 +1,7 @@
 # coding: utf-8
 from collections import namedtuple
 SubwayStation = namedtuple('SubwayStation', ['id', 'name'])
-SubwayLine = namedtuple('SubwayLine', ['id', 'name', 'stations'])
+SubwayLine = namedtuple('SubwayLine', ['id', 'name', 'stations', 'color'])
 
 
 all_subway_lines = [
@@ -28,7 +28,7 @@ all_subway_lines = [
         SubwayStation(20, u'Тропарёво'),
         SubwayStation(21, u'Румянцево'),
         SubwayStation(22, u'Саларьево'),
-    ]),
+    ], 'E40327'),
     SubwayLine('2', u'Замоскворецкая', [
         SubwayStation(23, u'Речной вокзал'),
         SubwayStation(24, u'Водный стадион'),
@@ -52,7 +52,7 @@ all_subway_lines = [
         SubwayStation(42, u'Домодедовская'),
         SubwayStation(43, u'Красногвардейская'),
         SubwayStation(44, u'Алма-Атинская'),
-    ]),
+    ], '47AF4E'),
     SubwayLine('3', u'Арбатско-Покровская', [
         SubwayStation(45, u'Пятницкое шоссе'),
         SubwayStation(46, u'Митино'),
@@ -76,7 +76,7 @@ all_subway_lines = [
         SubwayStation(64, u'Измайловская'),
         SubwayStation(65, u'Первомайская'),
         SubwayStation(66, u'Щёлковская'),
-    ]),
+    ], '0072BA'),
     SubwayLine('4', u'Филёвская', [
         SubwayStation(67, u'Кунцевская'),
         SubwayStation(68, u'Пионерская'),
@@ -91,7 +91,7 @@ all_subway_lines = [
         SubwayStation(77, u'Смоленская'),
         SubwayStation(78, u'Арбатская'),
         SubwayStation(79, u'Александровский сад'),
-    ]),
+    ], '26BCEF'),
     SubwayLine('5', u'Кольцевая', [
         SubwayStation(80, u'Парк культуры'),
         SubwayStation(81, u'Октябрьская'),
@@ -105,7 +105,7 @@ all_subway_lines = [
         SubwayStation(89, u'Белорусская'),
         SubwayStation(90, u'Краснопресненская'),
         SubwayStation(91, u'Киевская'),
-    ]),
+    ], '915133'),
     SubwayLine('6', u'Калужско-Рижская', [
         SubwayStation(92, u'Медведково'),
         SubwayStation(93, u'Бабушкинская'),
@@ -131,7 +131,7 @@ all_subway_lines = [
         SubwayStation(113, u'Тёплый Стан'),
         SubwayStation(114, u'Ясенево'),
         SubwayStation(115, u'Новоясеневская'),
-    ]),
+    ], 'F07E21'),
     SubwayLine('7', u'Таганско-Краснопресненская', [
         SubwayStation(116, u'Планерная'),
         SubwayStation(117, u'Сходненская'),
@@ -156,14 +156,14 @@ all_subway_lines = [
         SubwayStation(136, u'Лермонтовский проспект'),
         SubwayStation(137, u'Жулебино'),
         SubwayStation(138, u'Котельники'),
-    ]),
+    ], '943E90'),
     SubwayLine('8a', u'Солнцевский радиус Калининско-Солнцевской', [
         SubwayStation(139, u'Раменки'),
         SubwayStation(140, u'Ломоносовский проспект'),
         SubwayStation(141, u'Минская'),
         SubwayStation(142, u'Парк Победы'),
         SubwayStation(143, u'Деловой центр'),
-    ]),
+    ], 'FECD1F'),
     SubwayLine('8', u'Калининский радиус Калининско-Солнцевской', [
         SubwayStation(144, u'Третьяковская'),
         SubwayStation(145, u'Марксистская'),
@@ -173,7 +173,7 @@ all_subway_lines = [
         SubwayStation(149, u'Перово'),
         SubwayStation(150, u'Новогиреево'),
         SubwayStation(151, u'Новокосино'),
-    ]),
+    ], 'FECD1F'),
     SubwayLine('9', u'Серпуховско-Тимирязевская', [
         SubwayStation(152, u'Алтуфьево'),
         SubwayStation(153, u'Бибирево'),
@@ -200,7 +200,7 @@ all_subway_lines = [
         SubwayStation(174, u'Улица академика Янгеля'),
         SubwayStation(175, u'Аннино'),
         SubwayStation(176, u'Бульвар Дмитрия Донского'),
-    ]),
+    ], 'ACABAC'),
     SubwayLine('10', u'Люблинско-Дмитровская', [
         SubwayStation(177, u'Петровско-Разумовская'),
         SubwayStation(178, u'Фонвизинская'),
@@ -222,12 +222,12 @@ all_subway_lines = [
         SubwayStation(194, u'Борисово'),
         SubwayStation(195, u'Шипиловская'),
         SubwayStation(196, u'Зябликово'),
-    ]),
+    ], 'BDD125'),
     SubwayLine('11a', u'Каховская', [
         SubwayStation(197, u'Каширская'),
         SubwayStation(198, u'Варшавская'),
         SubwayStation(199, u'Каховская'),
-    ]),
+    ], '88CCCF'),
     SubwayLine('12', u'Бутовская', [
         SubwayStation(200, u'Битцевский парк'),
         SubwayStation(201, u'Лесопарковая'),
@@ -236,7 +236,7 @@ all_subway_lines = [
         SubwayStation(204, u'Бульвар адмирала Ушакова'),
         SubwayStation(205, u'Улица Горчакова'),
         SubwayStation(206, u'Бунинская аллея'),
-    ]),
+    ], 'B9C7E7'),
     SubwayLine('13', u'Монорельс', [
         SubwayStation(207, u'Тимирязевская'),
         SubwayStation(208, u'Улица Милашенкова'),
@@ -244,7 +244,7 @@ all_subway_lines = [
         SubwayStation(210, u'Улица Академика Королёва'),
         SubwayStation(211, u'Выставочный центр'),
         SubwayStation(212, u'Улица Сергея Эйзенштейна'),
-    ]),
+    ], '0072BA'),
     SubwayLine('14', u'МЦК', [
         SubwayStation(213, u'Окружная'),
         SubwayStation(214, u'Владыкино'),
@@ -277,7 +277,7 @@ all_subway_lines = [
         SubwayStation(241, u'Балтийская'),
         SubwayStation(242, u'Коптево'),
         SubwayStation(243, u'Лихоборы'),
-    ]),
+    ], '80D4C9'),
 ]
 
 all_conjunctions = [
