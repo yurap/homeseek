@@ -3,6 +3,7 @@ import tornado.web
 from config import Config
 from sources.group import Group
 from sources.filter import Filter
+from sources.helpers import first_or_none
 from pymongo import MongoClient
 
 
@@ -12,12 +13,6 @@ class AboutHandler(tornado.web.RequestHandler):
             'about.html',
             filter=Filter(None, {}),
         )
-
-
-def first_or_none(l):
-    if len(l) > 0:
-        return l[0]
-    return None
 
 
 class SearchHandler(tornado.web.RequestHandler):
@@ -41,7 +36,7 @@ db = MongoClient(Config.MONGO_URI)[Config.MONGO_DB]
 app = tornado.web.Application([
     (r"/", AboutHandler),
     (r"/s", SearchHandler, dict(db=db)),
-], debug=True, template_path=Config.TEMPLATES_FOLDER, static_path=Config.STATIC_FOLDER)
+], debug=False, template_path=Config.TEMPLATES_FOLDER, static_path=Config.STATIC_FOLDER)
 
 
 if __name__ == "__main__":

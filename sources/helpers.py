@@ -2,6 +2,12 @@
 import re
 
 
+def first_or_none(l):
+    if len(l) > 0:
+        return l[0]
+    return None
+
+
 vowels = [u'а',u'е',u'и',u'о',u'у',u'ы',u'ю',u'я',]
 def cut_ending_vowel(s):
     if s[-1] in vowels:
