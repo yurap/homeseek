@@ -51,7 +51,8 @@ class Filter(object):
         return Group.list()
 
     def get_group_by_id(self, gid):
-        return self.gid_to_group[gid]
+        if gid in self.gid_to_group:
+            return self.gid_to_group[gid]
 
     def get_subway_lines(self):
         return self.subway.get_lines()

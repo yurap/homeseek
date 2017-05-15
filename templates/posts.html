@@ -13,6 +13,7 @@ $(document).ready(function(){
 </script>
 
 {% for post in filter.posts %}
+{% if filter.get_group_by_id(post.group_id) is None %}{% continue %}{% end %}
 <div class="posts" style='border: 1px solid #ddd; padding: 5px 10px; margin-bottom: 10px'>
     <div class="content-subhead">
         <nobr><a class="post-category">{{ post.created_time }}</a></nobr>
