@@ -15,7 +15,7 @@ $(document).ready(function(){
         title: {text: 'Число объявлений по источникам за 14 дней'},
         plotOptions: {column: {stacking: 'normal',}},
         xAxis: {type: 'datetime', title: {text: ''}},
-        yAxis: [{title: {text: ''}}],
+        yAxis: [{title: {text: 'число объявлений'}}],
         series: [
             {% set groups = stats.get_groups() %}
             {% for i in xrange(len(groups)) %}
@@ -109,6 +109,7 @@ Homeseek – бесплатный сервис для поиска жилья в
 </p>
 
 <p><div id="posts_per_day" style="width:100%"></div></p>
+
 <p><div id="prices_distribution" style="width:100%"></div></p>
 
 <div style='padding: 5px'></div>
