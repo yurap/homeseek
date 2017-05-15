@@ -12,16 +12,21 @@ class Filter(object):
     def cut_price(self, price):
         return max(min(price, self.overall_max_price), self.overall_min_price)
 
+    def safe_get_int_value(self, data, key, default_value):
+        if key not in data or data[key] is None or not data[key].isnumeric():
+            return int(default_value)
+        return int(data[key])
+
     def __init__(self, db, data):
         self.gid_to_group = {g.id: g for g in Group.list()}
 
         self.db = db
         self.subway = Subway()
 
-        self.price_max  = self.cut_price(self.overall_max_price if 'price_max' not in data else int(data['price_max']))
-        self.price_min  = self.cut_price(self.overall_min_price if 'price_min' not in data else int(data['price_min']))
-        self.station_id = 0 if 'station' not in data else int(data['station'])
-        self.distance   = 3 if 'distance' not in data or not data['distance'].isnumeric() else int(data['distance'])
+        self.price_max  = self.cut_price(self.safe_get_int_value(data, 'price_max', self.overall_max_price))
+        self.price_min  = self.cut_price(self.safe_get_int_value(data, 'price_min', self.overall_min_price))
+        self.station_id = self.safe_get_int_value(data, 'station', 0)
+        self.distance   = self.safe_get_int_value(data, 'distance', 3)
         self.stations   = self.subway.get_stations_by_distance(self.station_id, self.distance)
         self.page       = 1 if 'page' not in data or data['page'] is None else max(int(data['page']), 1)
         self.start      = (self.page - 1) * self.posts_per_page
