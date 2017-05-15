@@ -33,7 +33,7 @@ class AboutHandler(tornado.web.RequestHandler):
                     now=datetime.now(),
                 )
                 self.write(html)
-                m.set('about.html', html, after_set, expiry=300)
+                m.set('about.html', html, after_set, expiry=600)
 
         m.get('about.html', before_get)
 
