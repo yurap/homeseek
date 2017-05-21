@@ -16,6 +16,30 @@
     color: #363946
 }
 
+#metro_tags a {
+    color: black;
+    cursor: pointer;
+}
+
+#metro_tags{
+    display:none;
+}
+
+#metro_button {
+    cursor: pointer;
+}
+
+#metro_button:hover + #metro_tags {
+    display:block;
+}
+
+.subway_chart_style {
+    width: 100%;
+    max-width: 260px;
+    height: auto;
+    margin: auto;
+}
+
 .centered_nav {
     position: absolute;
     top: 35%;
@@ -59,10 +83,14 @@ h3 {
     padding: 0
 }
 
+.margin-right {
+    margin: 0;
+}
+
 .header {
+    margin: auto;
     text-align: center;
     top: auto;
-    margin: 20px auto
 }
 
 .sidebar {
@@ -155,7 +183,9 @@ a.brand-link {
 }
 
 .filter a.drop-button {
-    background: #984447
+    cursor: pointer;
+    background: #984447;
+    font-size: 13px
 }
 
 .filter #groups_tags a {
@@ -259,9 +289,13 @@ p,
         padding: 2em 3em 0;
         margin-left: 25%
     }
+    .margin-right {
+        margin:0;
+        padding-right:23px;
+        /*margin-right: 23px:*/
+    }
     .header {
         text-align: right;
-        margin: 23px 23px 20px 0
     }
     .sidebar {
         position: fixed;

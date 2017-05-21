@@ -29,7 +29,10 @@ class Memnado(object):
             if data[0:3] == 'END': # key is empty
                 cb(None)
             else:
-                status, k, flags, content_length = data.strip().split(' ')
+                try:
+                    status, k, flags, content_length = data.strip().split(' ')
+                except:
+                    raise Exception('error! bad data format: {}'.format(data))
 
                 def wrapped_cb(f):
                     return lambda data: f(b64decode(data))

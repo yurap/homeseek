@@ -1,4 +1,40 @@
 <script type='text/javascript'>
+function update_stations(chart) {
+    var points = chart.getSelectedPoints();
+    var s = '';
+    for (var i = 0; i < points.length; i++)
+        s += points[i].id + '_';
+    $('#input_stations').val(s);
+    toast(this, points.length)
+}
+
+function toast(chart, text) {
+    $('#number_picked_stations').text(text);
+}
+
+function selectPointsByDrag(e) {
+    Highcharts.each(this.series, function (series) {
+        Highcharts.each(series.points, function (point) {
+            if (point.x >= e.xAxis[0].min && point.x <= e.xAxis[0].max &&
+                    point.y >= e.yAxis[0].min && point.y <= e.yAxis[0].max) {
+                point.select(true, true);
+            }
+        });
+    });
+    update_stations(this);
+    return false;
+}
+
+function unselectByClick() {
+    var points = this.getSelectedPoints();
+    if (points.length > 0) {
+        Highcharts.each(points, function (point) {
+            point.select(false);
+        });
+    }
+    update_stations(this);
+}
+
 $(document).ready(function(){
     $("#metro-select").select2({language: "ru"});
     $('#run_filter').click(function(){
@@ -10,50 +46,140 @@ $(document).ready(function(){
             return false;
         }
     });
+
+    var w = $('#metro_highcharts').width();
+    var h = $('#metro_highcharts').width() * 1.4;
+    var on = {
+        {% for station in filter.stations %}
+        '{{station.id}}': '{{station.line.color}}',
+        {% end %}
+    };
+    var chart = Highcharts.chart('metro_highcharts', {
+        credits:{enabled:false},
+        chart:{
+            backgroundColor:'rgba(255, 255, 255, 0)',
+            margin: [-10, 6, 0, 6],
+            spacing: [0, 7, 0, 7],
+            width: w,
+            height: h,
+            zoomType: 'xy',
+            selectionMarkerFill: 'rgba(255, 255, 255, 0.25)',
+            events: {
+                selection: selectPointsByDrag,
+                click: unselectByClick
+            },
+        },
+        plotOptions:{
+            series:{
+                allowPointSelect: true,
+                point: {
+                    events: {
+                        click: function() {
+                            this.select(!this.selected, true);
+                            update_stations(this.series.chart);
+                            return false;
+                        },
+                        select: function() {
+                            $('#metro_tags').append('<a id="sw_'+this.id+'" style="background-color:#'+this.line_color+'">'+this.name+'</a>')
+                        },
+                        unselect: function() {
+                            var sid = this.id;
+                            $('#metro_tags').children().each(function(){
+                                if (this.id == 'sw_' + sid)
+                                    $(this).remove();
+                            });
+                        }
+                    }
+                },
+                marker: {
+                    states: {
+                        select: {
+                            fillColor: null,
+                            lineColor: null,
+                            radius: 8
+                        }
+                    }
+                },
+                cursor: 'pointer',
+            }
+        },
+        legend:{enabled: false},
+        title:{text: ''},
+        xAxis:{visible: false},
+        yAxis:{visible: false},
+        tooltip: {
+            formatter: function () {
+                return this.series.name + ' линия<br><b>' + this.point.name + '</b>';
+            }
+        },
+        series: [
+            {% for line in filter.get_subway_lines() %}
+            {
+                findNearestPointBy: 'xy',
+                marker: {enabled:true, symbol: 'circle', radius:5},
+                name: '{{line.name}}',
+                color: '#{{line.color}}',
+                data: [
+                    {% for i in xrange(len(line.stations)) %}
+                        {% set station = line.stations[i] %}
+                        {
+                            x:{{station.x}},
+                            y:-{{station.y}},
+                            name:'{{station.name}}',
+                            id:'{{station.id}}',
+                            selected: {%if station.id in filter.station_ids%}true{%else%}false{%end%},
+                            line_color:'{{line.color}}'
+                        },
+                        {% if station.id == 73 %}{x:306,y:-627},{% end %}
+                    {% end %}
+
+                    {% if line.is_circle %}
+                        {% set station = line.stations[0] %}
+                        {x:{{station.x}},y:-{{station.y}}},
+                    {% end %}
+                ]
+            },
+            {% end %}
+        ]
+    });
+    update_stations(chart);
+
+    $('#drop_filter').click(function(){
+        Highcharts.fireEvent(chart, 'click');
+    });
 })
 </script>
 
-<a class='brand-link' href='/'><img src='{{ static_url('logo.png') }}'></a>
+<div style='padding: 11px'></div>
+<div class='margin-right'><a class='brand-link' href='/'><img src='{{ static_url('logo.png') }}'></a></div>
 
 <div class='filter'>
     <form id='filter_form' class="pure-form" method="get" action="/s#results">
-        <div style='height: 10px'></div>
-        <fieldset style='display:inline; padding:0; margin:0'>
-            <label style='display:inline' for='price_min'>цена от</label>
-            <input style='display:inline' type="text" id="price_min" name='min' class='price' value='{{filter.price_min}}'>
-            <label style='display:inline' for='price_max'>до</label>
-            <input style='display:inline' type="text" id='price_max' name='max' class='price' value='{{filter.price_max}}'>
-            <label style='display:inline' for='price_max'>руб.</label>
-        </fieldset>
-        <div style='height: 10px'></div>
-        <select id='metro-select' value='filter.station_id' name='m' style='max-width:80%'>
-            <option value='0' {% if filter.station_id == 0 %}selected{% end %}>Любое метро</option>
-            {% for line in filter.get_subway_lines() %}
-                <optgroup label='{{ line.name }}'>
-                {% for i in xrange(len(line.stations)) %}
-                {% set station = line.stations[i] %}
-                    <option value="{{ station.id }}" {% if filter.station_id == station.id %}selected{% end %}>{{ station.name }}</option>
-                }
-                {% end %}
-                </optgroup>
-            {% end %}
-        </select>
-        <div style='height: 10px'></div>
-        <fieldset style='display:inline; padding:0; margin:0'>
-            <label for='distance'>+ соседние на расстоянии</label>
-            <input style='display:inline; width: 50px' type="text" min="0" id="distance" name='d' class='price' value='{{filter.distance}}'>
-            <label for='distance'><nobr>(не более {{filter.subway.max_distance}}, включая пересадки)</nobr></label>
-        </fieldset>
+        <div class='margin-right'>
+            <div style='height: 10px'></div>
+            <fieldset style='display:inline; padding:0; margin:0'>
+                <label style='display:inline' for='price_min'>цена от</label>
+                <input style='display:inline' type="text" id="price_min" name='min' class='price' value='{{filter.price_min}}'>
+                <label style='display:inline' for='price_max'>до</label>
+                <input style='display:inline' type="text" id='price_max' name='max' class='price' value='{{filter.price_max}}'>
+                <label style='display:inline' for='price_max'>руб.</label>
+                <input type='hidden' id='input_stations' name='ss' value='{%for s in filter.stations%}{{s.id}}_{%end%}'>
+            </fieldset>
+        </div>
+        <div id='metro_highcharts' class="subway_chart_style"></div>
     </form>
     {% if len(filter.stations) > 0 %}
     <div style='padding: 6px'></div>
     {% end %}
-    <div id='metro_tags'>
-        {% set station_names = sorted(list(set([station.name for station in filter.stations]))) %}
-        {% for station_name in station_names %}<a>{{station_name}}</a>{% end %}
+    <div class='margin-right' style='margin-top:-10px; position: relative'>
+        <a id='metro_button' style='color:white'>Выбрано станций: <span id='number_picked_stations'>0</span> (развернуть)</a>
+        <div id='metro_tags' style='position:absolute; bottom:23px; right: 0'>
+            {%for s in filter.stations%}<a id="sw_{{s.id}}" style="background-color:#{{s.line.color}}">{{s.name}}</a>{%end%}
+        </div>
+    </div>
+
+    <div class='tags margin-right'>
+        <a class='drop-button' id='drop_filter'>Сброс</a><a class='search-button' id='run_filter'>Найти!</a>
     </div>
     <div style='padding: 6px'></div>
-    <div class='tags'>
-        <a class='search-button' id='run_filter'>Найти!</a>
-    </div>
 </div>

@@ -27,7 +27,11 @@ class Filter(object):
         self.price_min  = self.cut_price(self.safe_get_int_value(data, 'price_min', self.overall_min_price))
         self.station_id = self.safe_get_int_value(data, 'station', 0)
         self.distance   = self.safe_get_int_value(data, 'distance', 3)
-        self.stations   = self.subway.get_stations_by_distance(self.station_id, self.distance)
+
+        self.station_ids = [] if 'stations' not in data or data['stations'] is None else data['stations'].rstrip('_').split('_')
+        self.station_ids = set([int(sid) for sid in self.station_ids if sid.isnumeric()])
+        self.stations    = [self.subway.get_station_by_id(sid) for sid in self.station_ids]
+
         self.page       = 1 if 'page' not in data or data['page'] is None else max(int(data['page']), 1)
         self.start      = (self.page - 1) * self.posts_per_page
 

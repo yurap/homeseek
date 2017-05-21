@@ -18,24 +18,30 @@ m  = Memnado(Config.MEMCACHE_HOST, Config.MEMCACHE_PORT)
 class AboutHandler(tornado.web.RequestHandler):
     @tornado.web.asynchronous
     def get(self):
-        def after_set(html):
-            self.finish()
+        self.render(
+            'about.html',
+            stats=Stats(PostIterator(db.posts.find())),
+            filter=Filter(None, {}),
+            now=datetime.now(),
+        )
+        # def after_set(html):
+        #     self.finish()
 
-        def before_get(html):
-            if html is not None:
-                self.write(html)
-                self.finish()
-            else:
-                html = self.render_string(
-                    'about.html',
-                    stats=Stats(PostIterator(db.posts.find())),
-                    filter=Filter(None, {}),
-                    now=datetime.now(),
-                )
-                self.write(html)
-                m.set('about.html', html, after_set, expiry=600)
+        # def before_get(html):
+        #     if html is not None:
+        #         self.write(html)
+        #         self.finish()
+        #     else:
+        #         html = self.render_string(
+        #             'about.html',
+        #             stats=Stats(PostIterator(db.posts.find())),
+        #             filter=Filter(None, {}),
+        #             now=datetime.now(),
+        #         )
+        #         self.write(html)
+        #         m.set('about.html', html, after_set, expiry=600)
 
-        m.get('about.html', before_get)
+        # m.get('about.html', before_get)
 
 
 class SearchHandler(tornado.web.RequestHandler):
@@ -46,7 +52,7 @@ class SearchHandler(tornado.web.RequestHandler):
             filter=Filter(db, {
                 'price_min': first_or_none(self.get_query_arguments('min')),
                 'price_max': first_or_none(self.get_query_arguments('max')),
-                'station'  : first_or_none(self.get_query_arguments('m')),
+                'stations' : first_or_none(self.get_query_arguments('ss')),
                 'distance' : first_or_none(self.get_query_arguments('d')),
                 'page'     : first_or_none(self.get_query_arguments('p')),
             }),
