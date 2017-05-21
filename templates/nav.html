@@ -57,6 +57,7 @@ $(document).ready(function(){
     var chart = Highcharts.chart('metro_highcharts', {
         credits:{enabled:false},
         chart:{
+            panning: true,
             backgroundColor:'rgba(255, 255, 255, 0.1)',
             margin: [-10, 6, 0, 6],
             spacing: [0, 7, 0, 7],
@@ -120,7 +121,8 @@ $(document).ready(function(){
         tooltip: {
             formatter: function () {
                 return this.series.name + ' линия<br><b>' + this.point.name + '</b>';
-            }
+            },
+            followTouchMove: false
         },
         series: [
             {% for line in filter.get_subway_lines() %}
