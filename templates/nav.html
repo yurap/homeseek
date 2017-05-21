@@ -1,6 +1,6 @@
 <script type='text/javascript'>
 function isTouchDevice() {
-    return 'ontouchstart' in document.documentElement;
+    return !!('ontouchstart' in window || navigator.msMaxTouchPoints);
 }
 
 function toast(chart, text, delay) {
