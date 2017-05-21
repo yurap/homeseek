@@ -62,15 +62,25 @@ $(document).ready(function(){
             spacing: [0, 7, 0, 7],
             width: w,
             height: h,
-            // zoomType: 'xy',
+            zoomType: 'xy',
             selectionMarkerFill: 'rgba(255, 255, 255, 0.25)',
-            events: {
-                // selection: selectPointsByDrag,
-                // click: unselectByClick
-            },
         },
         plotOptions:{
             series:{
+                dataLabels: {
+                    enabled: true,
+                    shape: 'callout',
+                    y:-10,
+                    format: '{point.name}',
+                    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+                    borderWidth: 1,
+                    borderColor: '#FFFFFF',
+                    style: {
+                        color: '#FFFFFF',
+                        textOutline: 'none',
+                        fontWeight: 'normal',
+                    }
+                },
                 allowPointSelect: true,
                 point: {
                     events: {
@@ -130,12 +140,12 @@ $(document).ready(function(){
                             selected: {%if station.id in filter.station_ids%}true{%else%}false{%end%},
                             line_color:'{{line.color}}'
                         },
-                        {% if station.id == 73 %}{x:306,y:-627},{% end %}
+                        {% if station.id == 73 %}{x:306,y:-627,name:'Киевская'},{% end %}
                     {% end %}
 
                     {% if line.is_circle %}
                         {% set station = line.stations[0] %}
-                        {x:{{station.x}},y:-{{station.y}}},
+                        {x:{{station.x}},y:-{{station.y}}, name:'{{station.name}}'},
                     {% end %}
                 ]
             },

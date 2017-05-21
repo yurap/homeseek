@@ -24,24 +24,24 @@ class AboutHandler(tornado.web.RequestHandler):
             filter=Filter(None, {}),
             now=datetime.now(),
         )
-        # def after_set(html):
-        #     self.finish()
+        def after_set(html):
+            self.finish()
 
-        # def before_get(html):
-        #     if html is not None:
-        #         self.write(html)
-        #         self.finish()
-        #     else:
-        #         html = self.render_string(
-        #             'about.html',
-        #             stats=Stats(PostIterator(db.posts.find())),
-        #             filter=Filter(None, {}),
-        #             now=datetime.now(),
-        #         )
-        #         self.write(html)
-        #         m.set('about.html', html, after_set, expiry=600)
+        def before_get(html):
+            if html is not None:
+                self.write(html)
+                self.finish()
+            else:
+                html = self.render_string(
+                    'about.html',
+                    stats=Stats(PostIterator(db.posts.find())),
+                    filter=Filter(None, {}),
+                    now=datetime.now(),
+                )
+                self.write(html)
+                m.set('about.html', html, after_set, expiry=600)
 
-        # m.get('about.html', before_get)
+        m.get('about.html', before_get)
 
 
 class SearchHandler(tornado.web.RequestHandler):
