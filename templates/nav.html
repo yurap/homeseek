@@ -32,7 +32,7 @@ function unselectByClick(chart) {
             point.select(false);
         });
     }
-    update_stations(this);
+    update_stations(chart);
 }
 
 $(document).ready(function(){
@@ -58,13 +58,19 @@ $(document).ready(function(){
         credits:{enabled:false},
         chart:{
             panning: true,
-            backgroundColor:'rgba(255, 255, 255, 0.1)',
-            margin: [-10, 6, 0, 6],
+            backgroundColor:'rgba(255, 255, 255, 0)',
+            margin: [-5, 6, 0, 6],
             spacing: [0, 7, 0, 7],
             width: w,
             height: h,
             zoomType: 'xy',
             selectionMarkerFill: 'rgba(255, 255, 255, 0.25)',
+            resetZoomButton: {
+                position: {
+                    verticalAlign: 'bottom',
+                    y: -43
+                }
+            }
         },
         plotOptions:{
             series:{
@@ -159,6 +165,7 @@ $(document).ready(function(){
     $('#drop_filter').click(function(){
         // Highcharts.fireEvent(chart, 'click');
         unselectByClick(chart);
+        chart.zoom();
     });
 })
 </script>
