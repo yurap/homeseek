@@ -7,41 +7,33 @@ from sources.stats import Stats
 from sources.helpers import first_or_none
 from sources.post import PostIterator
 from pymongo import MongoClient
-from lib.memnado.memnado import Memnado
 from datetime import datetime
+import lib.tornado_memcache.tornadoasyncmemcache as memcache
 
 
-db = MongoClient(Config.MONGO_URI)[Config.MONGO_DB]
-m  = Memnado(Config.MEMCACHE_HOST, Config.MEMCACHE_PORT)
+db  = MongoClient(Config.MONGO_URI)[Config.MONGO_DB]
+ccs = memcache.ClientPool(['{}:{}'.format(Config.MEMCACHE_HOST, Config.MEMCACHE_PORT)], maxclients=100)
 
 
 class AboutHandler(tornado.web.RequestHandler):
     @tornado.web.asynchronous
     def get(self):
-        self.render(
-            'about.html',
-            stats=Stats(PostIterator(db.posts.find())),
-            filter=Filter(None, {}),
-            now=datetime.now(),
-        )
-        # def after_set(html):
-        #     self.finish()
+        ccs.get('about.html', callback=self._get_start)
 
-        # def before_get(html):
-        #     if html is not None:
-        #         self.write(html)
-        #         self.finish()
-        #     else:
-        #         html = self.render_string(
-        #             'about.html',
-        #             stats=Stats(PostIterator(db.posts.find())),
-        #             filter=Filter(None, {}),
-        #             now=datetime.now(),
-        #         )
-        #         self.write(html)
-        #         m.set('about.html', html, after_set, expiry=600)
+    def _get_start(self, html):
+        if html is None:
+            html = self.render_string(
+                'about.html',
+                stats=Stats(PostIterator(db.posts.find())),
+                filter=Filter(None, {}),
+                now=datetime.now(),
+            )
+            ccs.set('about.html', html, time=600, callback=self._set_end)
+        self.write(html)
+        self.finish()
 
-        # m.get('about.html', before_get)
+    def _set_end(self, data):
+        pass
 
 
 class SearchHandler(tornado.web.RequestHandler):
