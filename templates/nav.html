@@ -2,7 +2,7 @@
 /**
  * Display a temporary label on the chart
  */
-function toast(chart, text) {
+function toast(chart, text, delay) {
     chart.toast = chart.renderer.label(text, 5, 5)
         .attr({
             fill: Highcharts.getOptions().colors[0],
@@ -17,10 +17,10 @@ function toast(chart, text) {
 
     setTimeout(function () {
         chart.toast.fadeOut();
-    }, 2000);
+    }, delay);
     setTimeout(function () {
         chart.toast = chart.toast.destroy();
-    }, 2500);
+    }, delay + 500);
 }
 
 function update_stations(chart) {
@@ -98,7 +98,7 @@ $(document).ready(function(){
             },
             events: {
                 load: function() {
-                    toast(this, "Используйте два пальца или shift,<br> чтобы перемещаться по схеме")
+                    toast(this, "Используйте два пальца или shift,<br> для увеличения масштаба и перемещения по схеме", 3000)
                 }
             }
         },
