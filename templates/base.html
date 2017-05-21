@@ -13,14 +13,15 @@
     <script src="{{ static_url('select2.min.js') }}"></script>
     <script src="{{ static_url('select2.ru.js') }}"></script>
     <link rel="stylesheet" href="{{ static_url('jquery.bxslider.css') }}">
-    <!-- <script src="{{ static_url('highcharts.js') }}"></script> -->
-    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="{{ static_url('highcharts.js') }}"></script>
     <script src="{{ static_url('highcharts-more.js') }}"></script>
 
 <style>
 .sidebar {
-    background: url(/static/the_cat.png) no-repeat #020202;
-    background-position: left 40px
+    /*background: url(/static/the_cat.png) no-repeat #020202;*/
+    background: none;
+    background-color:#020202;
+    /*background-position: left 40px*/
 }
 @media (min-width: 64em) {
     .sidebar {background-position: left bottom}
