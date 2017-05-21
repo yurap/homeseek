@@ -18,13 +18,13 @@
 
 <style>
 .sidebar {
-    /*background: url(/static/the_cat.png) no-repeat #020202;*/
-    background: none;
-    background-color:#020202;
-    /*background-position: left 40px*/
+    background: none no-repeat #020202;
 }
 @media (min-width: 64em) {
-    .sidebar {background-position: left bottom}
+    .sidebar {
+        background: url(/static/the_cat.png) no-repeat #020202;
+        background-position: left bottom
+    }
 }
 </style>
 </head>
