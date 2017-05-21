@@ -25,8 +25,8 @@ function selectPointsByDrag(e) {
     return false;
 }
 
-function unselectByClick() {
-    var points = this.getSelectedPoints();
+function unselectByClick(chart) {
+    var points = chart.getSelectedPoints();
     if (points.length > 0) {
         Highcharts.each(points, function (point) {
             point.select(false);
@@ -62,11 +62,11 @@ $(document).ready(function(){
             spacing: [0, 7, 0, 7],
             width: w,
             height: h,
-            zoomType: 'xy',
+            // zoomType: 'xy',
             selectionMarkerFill: 'rgba(255, 255, 255, 0.25)',
             events: {
-                selection: selectPointsByDrag,
-                click: unselectByClick
+                // selection: selectPointsByDrag,
+                // click: unselectByClick
             },
         },
         plotOptions:{
@@ -145,7 +145,8 @@ $(document).ready(function(){
     update_stations(chart);
 
     $('#drop_filter').click(function(){
-        Highcharts.fireEvent(chart, 'click');
+        // Highcharts.fireEvent(chart, 'click');
+        unselectByClick(chart);
     });
 })
 </script>
