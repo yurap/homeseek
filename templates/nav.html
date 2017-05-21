@@ -58,6 +58,7 @@ $(document).ready(function(){
         credits:{enabled:false},
         chart:{
             panning: true,
+            panKey: 'shift',
             backgroundColor:'rgba(255, 255, 255, 0)',
             margin: [-5, 6, 0, 6],
             spacing: [0, 7, 0, 7],
@@ -75,9 +76,11 @@ $(document).ready(function(){
         plotOptions:{
             series:{
                 dataLabels: {
+                    align: 'left',
                     enabled: true,
                     shape: 'callout',
-                    y:-10,
+                    y: 5,
+                    x: 10,
                     format: '{point.name}',
                     backgroundColor: 'rgba(0, 0, 0, 0.75)',
                     borderWidth: 1,
@@ -163,7 +166,6 @@ $(document).ready(function(){
     update_stations(chart);
 
     $('#drop_filter').click(function(){
-        // Highcharts.fireEvent(chart, 'click');
         unselectByClick(chart);
         chart.zoom();
     });
@@ -192,7 +194,7 @@ $(document).ready(function(){
     <div style='padding: 6px'></div>
     {% end %}
     <div class='margin-right' style='margin-top:-10px; position: relative'>
-        <a id='metro_button' style='color:white'>Выбрано станций: <span id='number_picked_stations'>0</span> (развернуть)</a>
+        <a id='metro_button' style='color:white'>Выбрано станций: <span id='number_picked_stations'>0</span> (посмотреть)</a>
         <div id='metro_tags' style='position:absolute; bottom:23px; right: 0'>
             {%for s in filter.stations%}<a id="sw_{{s.id}}" style="background-color:#{{s.line.color}}">{{s.name}}</a>{%end%}
         </div>
