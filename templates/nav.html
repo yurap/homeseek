@@ -1,14 +1,38 @@
 <script type='text/javascript'>
+/**
+ * Display a temporary label on the chart
+ */
+function toast(chart, text) {
+    chart.toast = chart.renderer.label(text, 5, 5)
+        .attr({
+            fill: Highcharts.getOptions().colors[0],
+            padding: 10,
+            r: 5,
+            zIndex: 8
+        })
+        .css({
+            color: '#FFFFFF'
+        })
+        .add();
+
+    setTimeout(function () {
+        chart.toast.fadeOut();
+    }, 2000);
+    setTimeout(function () {
+        chart.toast = chart.toast.destroy();
+    }, 2500);
+}
+
 function update_stations(chart) {
     var points = chart.getSelectedPoints();
     var s = '';
     for (var i = 0; i < points.length; i++)
         s += points[i].id + '_';
     $('#input_stations').val(s);
-    toast(this, points.length)
+    update_picked_stations(this, points.length)
 }
 
-function toast(chart, text) {
+function update_picked_stations(chart, text) {
     $('#number_picked_stations').text(text);
 }
 
@@ -71,6 +95,11 @@ $(document).ready(function(){
                     verticalAlign: 'bottom',
                     y: -43
                 }
+            },
+            events: {
+                load: function() {
+                    toast(this, "Используйте два пальца или shift,<br> чтобы перемещаться по схеме")
+                }
             }
         },
         plotOptions:{
@@ -131,7 +160,7 @@ $(document).ready(function(){
             formatter: function () {
                 return this.series.name + ' линия<br><b>' + this.point.name + '</b>';
             },
-            followTouchMove: false
+            // followTouchMove: false
         },
         series: [
             {% for line in filter.get_subway_lines() %}
