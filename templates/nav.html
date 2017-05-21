@@ -1,8 +1,4 @@
 <script type='text/javascript'>
-function isTouchDevice() {
-    return 'ontouchstart' in window || navigator.maxTouchPoints;
-}
-
 function toast(chart, text, delay) {
     chart.toast = chart.renderer.label(text, 5, 5)
         .attr({
@@ -100,7 +96,7 @@ $(document).ready(function(){
             events: {
                 load: function() {
                     if (isTouchDevice)
-                        toast(this, "Используйте два пальца<br> для масштабирования и перемещения по схеме", 3000)
+                        toast(this, "Используйте два пальца или курсор<br> для масштабирования и перемещения по схеме", 3000)
                 }
             }
         },
