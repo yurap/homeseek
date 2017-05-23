@@ -23,6 +23,9 @@ $(document).ready(function(){
         {% for t in post.subway %}
             <nobr><a class="post-category post-category-pure">м. {{t}}</a></nobr>
         {% end %}
+        {% if post.subway_near %}
+        <nobr><a class="post-category post-category-pure">метро рядом</a></nobr>
+        {% end %}
     </div>
     <section class="post">
         {% if len(post.attachments) > 0 %}

@@ -13,6 +13,8 @@ class Post(object):
         self._attrs = []
         for attr in data:
             self.set(attr, data[attr])
+        if 'subway_near' not in data:
+            self.subway_near = False
 
     def set(self, attr, value):
         self._attrs.append(attr)

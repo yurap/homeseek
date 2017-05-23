@@ -31,10 +31,9 @@ class StationReg(object):
         self.station = station
         self.reg = _prepare_station_reg(station.name.lower())
 
-    def get_candidates(self, post):
-        text = post['text']
+    def get_candidates(self, text):
         candidates = []
-        for m in self.reg.finditer(text):
+        for m in self.reg.finditer(text + ' '):
             c = AbstractParser.Candidate(
                 text[m.start()-20:m.start()+len(m.group()) + 21].lower(),
                 self.station.name.lower(),
@@ -54,7 +53,10 @@ class SubwayParser(AbstractParser):
         stations.sort(key=lambda s: s.name)
         return [StationReg(s) for s in stations]
 
-    def _get_candidates(self, text):
+    def _get_candidates(self, post):
+        return self._get_candidates_from_text(post['text'])
+
+    def _get_candidates_from_text(self, text):
         candidates = []
         for r in self.subway_regs:
             candidates += r.get_candidates(text)
@@ -80,9 +82,8 @@ class SubwayParser(AbstractParser):
         r = re.compile(w, re.I | re.U)
         in_context = r.search(c.context) is not None
         in_guess = r.search(c.guess) is not None
-        
+
         if not in_guess and in_context:
-            # print u'[{}] {}'.format(c.guess, c.context.replace('\n', ' '))
             return True
         return False
 
@@ -92,3 +93,12 @@ class SubwayParser(AbstractParser):
         if self._check_park_word(c):
             return False
         return True
+
+    def check_text_has_station_name(self, text):
+        cands = self._get_candidates_from_text(text)
+        # print '!', len(cands)
+        for c in cands:
+            # print '$', c.context
+            if self._check_candidate(c):
+                return True
+        return False

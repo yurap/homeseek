@@ -47,9 +47,9 @@ class SearchHandler(tornado.web.RequestHandler):
                 'stations' : first_or_none(self.get_query_arguments('ss')),
                 'distance' : first_or_none(self.get_query_arguments('d')),
                 'page'     : first_or_none(self.get_query_arguments('p')),
+                'subway_near': first_or_none(self.get_query_arguments('swn')),
             }),
         )
-
 
 
 app = tornado.web.Application([

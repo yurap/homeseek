@@ -11,5 +11,5 @@ class AbstractParser(object):
     def _get_candidates(self, text):
         raise NotImplemented()
 
-    def _check_candidate(self, text):
+    def _check_candidate(self, c):
         raise NotImplemented()

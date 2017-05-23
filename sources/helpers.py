@@ -15,6 +15,19 @@ def cut_ending_vowel(s):
     return s
 
 
+re_phrases_splitter = re.compile(u'[\r\n,:;!\?\(\)]|([а-яё]{4,}\.)', re.I | re.U)
+def split_to_phrases(text):
+    chunks = re_phrases_splitter.split(text)
+    phrases = []
+    for i in xrange(0, len(chunks), 2):
+        phrase = chunks[i]
+        if i+1 < len(chunks) and chunks[i+1] is not None:
+            phrase += chunks[i+1]
+        phrase = phrase.strip()
+        if len(phrase) > 1:
+            phrases.append(phrase)
+    return phrases
+
 re_sentence_splitter = re.compile(u'[\r\n]+|(?:[!?\.;](?:[ ]|([А-ЯЁA-Z])))', re.U)
 def split_to_sentences(text):
     sentences = re_sentence_splitter.split(text)

@@ -23,6 +23,8 @@ class Filter(object):
         self.db = db
         self.subway = Subway()
 
+        self.subway_near = 'subway_near' in data and data['subway_near'] == 'on'
+
         self.price_max  = self.cut_price(self.safe_get_int_value(data, 'price_max', self.overall_max_price))
         self.price_min  = self.cut_price(self.safe_get_int_value(data, 'price_min', self.overall_min_price))
         self.station_id = self.safe_get_int_value(data, 'station', 0)
@@ -50,6 +52,10 @@ class Filter(object):
         query['max_price'] = {'$gte': self.price_min / 1000}
         if len(self.stations) > 0:
             query['subway'] = {'$in': [s.name.lower() for s in self.stations]}
+        if self.subway_near:
+            query['subway_near'] = True
+
+        # return self.db.anti_posts \
         return self.db.posts \
             .find(query) \
             .skip(self.start) \

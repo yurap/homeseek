@@ -216,6 +216,12 @@ $(document).ready(function(){
                 <label style='display:inline' for='price_max'>руб.</label>
                 <input type='hidden' id='input_stations' name='ss' value='{%for s in filter.stations%}{{s.id}}_{%end%}'>
             </fieldset>
+            <div style='height: 4px'></div>
+            <fieldset style='display:inline; padding:0; margin:0'>
+                <label style='display:inline' for='subway_near'>
+                    <input style='display:inline' type="checkbox" id="subway_near" name='swn' {%if filter.subway_near%}checked="checked"{%end%}> метро рядом
+                </label>
+            </fieldset>
         </div>
         <div id='metro_highcharts' class="subway_chart_style"></div>
     </form>

@@ -57,12 +57,6 @@ class DupFinder(object):
             return False
         return True
 
-    # def find_dup(self, p):
-    #     for h in p.get_sentence_hashes():
-    #         if h in self._hashes:
-    #             return self._hashes[h]
-    #     return None
-
     def check_and_add(self, p):
         if not self._check_post_is_unique(p):
             return False

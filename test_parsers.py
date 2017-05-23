@@ -6,6 +6,7 @@ from sources.abstract_parser import AbstractParser
 from sources.price_parser import PriceParser
 from sources.subway_parser import SubwayParser
 from sources.rent_parser import RentParser
+from sources.subway_near_parser import SubwayNearParser
 
 
 def load_markup(input_file):
@@ -49,16 +50,18 @@ def print_errors(pool, cls_parser, fn_get_correct, limit=5, start=None):
             ready = True
         if start is not None and not ready:
             continue
-        
+
         guessed = set(parser.do(p))
         correct = set(fn_get_correct(p))
         if guessed != correct:
             limit -= 1
             print '\n== {} =='.format(p['_id']['$oid'])
-            for cand in parser._get_candidates(p['text'].replace('\n', ' ')):
+            for cand in parser._get_candidates(p):
                 print u'* [{}] {}'.format(cand.guess, cand.context)
             print u'correct :', u', '.join(sorted(map(unicode, list(correct))))
             print u'guessed :', u', '.join(sorted(map(unicode, list(guessed))))
+            # parser.debug(p)
+            # print p['text'].replace('\n', ' ')
 
 
 def run_parse_test(name, pool, cls_parser, fn_check, debug):
@@ -88,10 +91,18 @@ if __name__ == '__main__':
     )
 
     run_parse_test(
-        'IS_RENT',
+        'SUBWAY NEAR',
         pool,
-        RentParser,
-        lambda post: [1 if u'сдать' in post['tags'] else 0],
+        SubwayNearParser,
+        lambda post: [1] if u'метро-недалеко' in post['tags'] else [],
         False,
     )
-    
+
+    run_parse_test(
+        'IS RENT',
+        pool,
+        RentParser,
+        lambda post: [1] if u'сдать' in post['tags'] else [0],
+        False,
+    )
+

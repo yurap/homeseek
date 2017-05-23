@@ -25,11 +25,13 @@ def _flat_regex(rooms):
 
 class RentParser(AbstractParser):
     _model_file = os.path.dirname(os.path.abspath(__file__)) + '/../data/rent.adaboost.clf'
+    _anti_model_file = os.path.dirname(os.path.abspath(__file__)) + '/../data/antirent.gradboost.clf'
 
     # todo: make this pretty
     fnames = ['attachments', 'digits', 'flat', 'give', 'locals', 'money', 'nboor', 'offtop', 'price', 'question_marks', 'room', 'sents', 'share', 'take']
-    def __init__(self):
-        self._clf = pickle.loads(open(self._model_file).read())
+    def __init__(self, anti=False):
+        f = self._anti_model_file if anti else self._model_file
+        self._clf = pickle.loads(open(f).read())
 
     def _classify(self, post):
         features = self._calc_features(post)
