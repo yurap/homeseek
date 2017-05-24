@@ -1,3 +1,4 @@
+#coding:utf-8
 from abstract_parser import AbstractParser
 import re
 
@@ -16,11 +17,11 @@ class AgentParser(AbstractParser):
         return r.search(text) is not None
 
     def _check_alt_word(self, text):
-        r = re.compile(u'альтернативн[^ ]+ предлож', re.I | re.U)
+        r = re.compile(u'много (других|альтернативных) (предложений|вариантов)', re.I | re.U)
         return r.search(text) is not None
 
     def _check_candidate(self, c):
         return self._check_agent_word(c.context) or self._check_alt_word(c.context)
 
     def check(self, post):
-        return list(self.do(post))[0] == 1
+        return self.do(post) == {1}
