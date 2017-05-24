@@ -6,23 +6,23 @@ import datetime
 
 
 class AbstractLoader(object):
-    def _load(self, group):
+    def _load(self, group, offset):
         raise NotImplemented()
 
     def _parse(self, json_data):
         raise NotImplemented()
 
-    def _try_to_load(self, group):
+    def _try_to_load(self, group, offset):
         data = []
         try:
-            data = self._load(group)
+            data = self._load(group, offset)
         except Exception as e:
             raise
             pass
         return data
 
-    def get(self, group):
-        posts_json = self._try_to_load(group)
+    def get(self, group, offset):
+        posts_json = self._try_to_load(group, offset)
         posts = []
         for post_json in posts_json:
             post = self._parse_post_data(post_json, group)
@@ -35,13 +35,13 @@ class VkLoader(AbstractLoader):
     def __init__(self, count):
         self._count = count
 
-    def _load(self, group):
+    def _load(self, group, offset):
         r = requests.get(
             "https://api.vk.com/method/wall.get",
             params={
                 'owner_id': group.id,
                 'count': self._count,
-                'offset': 0,
+                'offset': offset,
                 'filter': 'all',
                 'version': '5.52',
             }
@@ -79,12 +79,12 @@ class FbLoader(AbstractLoader):
         self._count = count
         self._token = token
 
-    def _load(self, group):
+    def _load(self, group, offset):
         r = requests.get(
             "https://graph.facebook.com/v2.5/{}/feed".format(group.id),
             params={
                 'limit': self._count,
-                'offset': 0,
+                'offset': offset,
                 'filter': 'all',
                 'fields': 'created_time,message,attachments',
                 'access_token': self._token,
@@ -107,9 +107,22 @@ class FbLoader(AbstractLoader):
 
 class PostsLoader(object):
     def __init__(self, data_folder, count):
+        self._count = count
         self._vk = VkLoader(count)
         self._fb = FbLoader(open('{}/fb_token'.format(data_folder)).read().rstrip(), count)
 
-    def get(self, g):
+    def get(self, g, pages=1):
         loader = self._vk if g.check_is_vk() else self._fb
-        return loader.get(g)
+        posts = []
+        offset = (pages - 1) * self._count
+        while offset >= 0:
+            try:
+                posts += loader.get(g, offset)
+                print >> sys.stderr, 'group {} offset {}: OK'.format(g.id, offset)
+            except Exception as e:
+                print >> sys.stderr, 'Smth went wrong with group {} offset {}: {}'.format(g.id, offset, str(e))
+            offset -= self._count
+
+        # this is important for dups date checker
+        posts.sort(key=lambda p: p.created_time)
+        return posts

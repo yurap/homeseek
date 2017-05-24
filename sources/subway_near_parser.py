@@ -28,13 +28,11 @@ class SubwayNearParser(AbstractParser):
 
     def _check_metro_word(self, text):
         r = re.compile(u'метро|м\.', re.U | re.I)
-        if r.search(text) is not None:
-            return True
+        return r.search(text) is not None
 
     def _check_antimetro_word(self, text):
         r = re.compile(u'маршрутк|электричк', re.U | re.I)
-        if r.search(text) is not None:
-            return True
+        return r.search(text) is not None
 
     def _check_station(self, text):
         return self._subway_parser.check_text_has_station_name(text)

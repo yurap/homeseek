@@ -8,7 +8,7 @@ class AbstractParser(object):
         candidates = self._get_candidates(post)
         return set([c.guess for c in candidates if self._check_candidate(c)])
 
-    def _get_candidates(self, text):
+    def _get_candidates(self, post):
         raise NotImplemented()
 
     def _check_candidate(self, c):
