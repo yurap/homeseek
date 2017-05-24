@@ -198,6 +198,12 @@ $(document).ready(function(){
         unselectByClick(chart);
         chart.zoom();
     });
+
+    $(window).resize(function(){
+        var w = $('#metro_highcharts').width();
+        var h = $('#metro_highcharts').width() * 1.4;
+        chart.setSize(w, h, false);
+    })
 })
 </script>
 
