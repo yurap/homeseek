@@ -44,11 +44,10 @@ class SearchHandler(tornado.web.RequestHandler):
             filter=Filter(db, {
                 'price_min': first_or_none(self.get_query_arguments('min')),
                 'price_max': first_or_none(self.get_query_arguments('max')),
-                'stations' : first_or_none(self.get_query_arguments('ss')),
-                'distance' : first_or_none(self.get_query_arguments('d')),
                 'page'     : first_or_none(self.get_query_arguments('p')),
+                'stations' : first_or_none(self.get_query_arguments('ss')),
                 'subway_near': first_or_none(self.get_query_arguments('swn')),
-            }),
+            })
         )
 
 

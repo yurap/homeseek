@@ -45,3 +45,7 @@ def split_to_sentences(text):
 phone_re = re.compile(u'\+?[0-9][0-9 \-\(\)]{7,}[0-9]', re.I | re.U)
 def remove_phones(s):
     return phone_re.sub(lambda m: u'[см. источник]', s)
+
+
+def send_email():
+    pass

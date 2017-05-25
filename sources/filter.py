@@ -2,6 +2,7 @@ from group import Group
 from subway import Subway
 from post import Post
 from pymongo import DESCENDING
+from subscriptor import Subscriptor
 
 
 class Filter(object):
@@ -28,7 +29,6 @@ class Filter(object):
         self.price_max  = self.cut_price(self.safe_get_int_value(data, 'price_max', self.overall_max_price))
         self.price_min  = self.cut_price(self.safe_get_int_value(data, 'price_min', self.overall_min_price))
         self.station_id = self.safe_get_int_value(data, 'station', 0)
-        self.distance   = self.safe_get_int_value(data, 'distance', 3)
 
         self.station_ids = [] if 'stations' not in data or data['stations'] is None else data['stations'].rstrip('_').split('_')
         self.station_ids = set([int(sid) for sid in self.station_ids if sid.isnumeric()])
@@ -79,11 +79,14 @@ class Filter(object):
         return abs(int(p) - int(self.page)) >= 3
 
     def get_url_for_page(self, p):
-        return '/s?min={}&max={}&d={}&m={}&p={}'.format(
-            self.price_min,
-            self.price_max,
-            self.distance,
-            self.station_id,
-            p,
+        return '/s?min={min}&max={max}&ss={stations}{subway_near}&p={page}'.format(
+            min=self.price_min,
+            max=self.price_max,
+            stations='_'.join(map(str, sorted(list(self.station_ids)))),
+            subway_near='&swn=on' if self.subway_near else '',
+            page=p,
         )
+
+    def get_subscriptor(self):
+        return Subscriptor()
 
