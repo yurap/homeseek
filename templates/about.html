@@ -1,107 +1,22 @@
 {% extends "base.html" %}
 {% block content %}
-<script type='text/javascript'>
-function get_station_name(sid) {
-    {% for line in stats.get_lines() %}{% for station in line.stations %}
-    if(sid=={{station.id}})return "{{station.name}}";{% end %}{% end %}
-    return sid;
-}
 
-$(document).ready(function(){
-    Highcharts.chart('posts_per_day', {
-        credits: {enabled: false},
-        chart: {type: 'column'},
-        title: {text: 'Число объявлений по источникам за 14 дней'},
-        plotOptions: {column: {stacking: 'normal',}},
-        xAxis: {type: 'datetime', title: {text: ''}},
-        yAxis: [{title: {text: 'число объявлений'}}],
-        series: [
-            {% set groups = stats.get_groups() %}
-            {% for i in xrange(len(groups)) %}
-            {
-                name: '{{ groups[i].name }}',
-                type: 'column',
-                data: [
-                    {% for dt, total in stats.get_group_posts_per_day(groups[i].id) %}
-                    [Date.UTC({{dt.year}}, {{dt.month - 1}}, {{dt.day}}), {{total}}],
-                    {% end %}
-                ],
-                pointPadding: 0,
-                groupPadding: 0
-            }
-            {% if i + 1 < len(groups) %},{% end %}
-            {% end %}
-        ]
-    });
-
-    Highcharts.chart('prices_distribution', {
-        tooltip: {
-            formatter: function () {
-                return 'объявлений c ценой <b>' + this.x + ' 000</b> рублей: <b>' + this.y + '</b>';
-            }
-        },
-        legend: {enabled: false},
-        credits: {enabled: false},
-        chart: {type: 'column'},
-        title: {text: 'Число объявлений по ценам за 14 дней'},
-        plotOptions: {column: {stacking: 'normal',}},
-        xAxis: [{title: {text: 'тысяч рублей'}}],
-        yAxis: [{title: {text: 'число объявлений'}}],
-        series: [
-            {
-                name: '',
-                type: 'column',
-                data: [
-                    {% for price, total in stats.get_prices() %}
-                    [{{price}}, {{total}}],
-                    {% end %}
-                ],
-                pointPadding: 0,
-                groupPadding: 0
-            }
-        ]
-    });
-
-    Highcharts.chart('subway_covering', {
-        tooltip: {
-            formatter: function () {
-                return '<b>' + this.series.name + '</b><br>на станции <b>' + get_station_name(this.x) + '</b> объявлений: <b>' + this.y + '</b>';
-            }
-        },
-        credits: {enabled: false},
-        chart: {type: 'column'},
-        title: {text: 'Число объявлений по станциям метро за 14 дней'},
-        plotOptions: {column: {stacking: 'normal',}},
-        xAxis: [{visible: false}],
-        yAxis: [{title: {text: 'число объявлений'}}],
-        series: [
-            {% for line in stats.get_lines() %}
-            {
-                name: '{{line.name}}',
-                color: '#{{line.color}}',
-                type: 'column',
-                data: [
-                    {% for station in line.stations %}
-                    [{{station.id}}, {{stats.get_station_count(station.id)}}],
-                    {% end %}
-                ],
-                pointPadding: 0,
-                groupPadding: 0
-            },
-            {% end %}
-        ]
-    });
-})
-</script>
 
 <p style='margin-top: 0'>
 Homeseek – бесплатный сервис для поиска жилья в Москве. Мы автоматически в реальном времени анализируем посты из социальных сетей: извлекаем цену, метро, удаляем дубли и спам, а вы можете отфильтровать только интересные вам объявления.
 </p>
-<p><div id="subway_covering" style="width:100%"></div></p>
 
-<p>Каждый день у нас появляется в среднем около 100 новых объявлений.</p>
+<p style='border: 1px solid #5DA271; padding: 10px'>
+- Используйте курсор (нажать и потянуть) или два пальца (на тач-устройствах) для масштабирования и перемещения по схеме метро.
+<br><br>
+- Кнопки "Reset zoom" или "Сброс" вернут вас к исходному масштабу.
+<br><br>
+- Чтобы выделить станцию, нажимайте на её кружочек, а не название.
+<br><br>
+- Если на десктопе сузить браузер, то схема станет огромной.
+</p>
 
-<p><div id="posts_per_day" style="width:100%"></div></p>
+<p>Каждый день у нас появляется в среднем около 100 новых объявлений. Более подробную статистику можно посмотреть на <a href='/stats'>отдельной странице.</a></p>
 
 <p>
 Источники, которые мы анализируем:
@@ -110,8 +25,6 @@ Homeseek – бесплатный сервис для поиска жилья в
 <a target='_blank' href='{{groups[i].get_url()}}'>{{groups[i].name}}{% if i+1 == len(groups) %}.{% else %},{% end %}</a>&nbsp;
 {% end %}
 </p>
-
-<p><div id="prices_distribution" style="width:100%"></div></p>
 
 <p>
 Если вы знаете, как нам стать лучше – пишите в <a target="_blank" href="https://www.facebook.com/groups/homeseek/">facebook</a> или <a target="_blank" href="https://github.com/yurap/homeseek">github.</a>

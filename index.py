@@ -15,16 +15,37 @@ db  = MongoClient(Config.MONGO_URI)[Config.MONGO_DB]
 ccs = memcache.ClientPool(['{}:{}'.format(Config.MEMCACHE_HOST, Config.MEMCACHE_PORT)], maxclients=100)
 
 
+class StatsHandler(tornado.web.RequestHandler):
+    @tornado.web.asynchronous
+    def get(self):
+        ccs.get('stats.html', callback=self._get_start)
+
+    def _get_start(self, html):
+        if html is None:
+            html = self.render_string(
+                'stats.html',
+                stats=Stats(PostIterator(db.posts.find())),
+                filter=Filter(None, {}),
+                now=datetime.now(),
+            )
+            ccs.set('stats.html', html, time=600, callback=self._set_end)
+        self.write(html)
+        self.finish()
+
+    def _set_end(self, data):
+        pass
+
+
 class AboutHandler(tornado.web.RequestHandler):
     @tornado.web.asynchronous
     def get(self):
         ccs.get('about.html', callback=self._get_start)
 
     def _get_start(self, html):
-        if html is None:
+        # if html is None:
+        if True:
             html = self.render_string(
                 'about.html',
-                stats=Stats(PostIterator(db.posts.find())),
                 filter=Filter(None, {}),
                 now=datetime.now(),
             )
@@ -53,6 +74,7 @@ class SearchHandler(tornado.web.RequestHandler):
 
 app = tornado.web.Application([
     (r"/", AboutHandler),
+    (r"/stats", StatsHandler),
     (r"/s", SearchHandler),
 ], debug=False, template_path=Config.TEMPLATES_FOLDER, static_path=Config.STATIC_FOLDER)
 

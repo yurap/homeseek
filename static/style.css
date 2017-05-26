@@ -187,6 +187,12 @@ a.brand-link {
     font-size: 13px
 }
 
+.filter a.fullscreen-button {
+    cursor: pointer;
+    background: #489EDD;
+    font-size: 13px
+}
+
 .filter #groups_tags a {
     background: #984447
 }
@@ -291,7 +297,6 @@ p,
     .margin-right {
         margin:0;
         padding-right:23px;
-        /*margin-right: 23px:*/
     }
     .header {
         text-align: right;
