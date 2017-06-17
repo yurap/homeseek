@@ -32,7 +32,7 @@ class AbstractLoader(object):
 
 
 class VkLoader(AbstractLoader):
-    def __init__(self, token count):
+    def __init__(self, token, count):
         self._token = token
         self._count = count
 
