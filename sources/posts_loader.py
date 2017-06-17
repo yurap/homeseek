@@ -32,7 +32,8 @@ class AbstractLoader(object):
 
 
 class VkLoader(AbstractLoader):
-    def __init__(self, count):
+    def __init__(self, token count):
+        self._token = token
         self._count = count
 
     def _load(self, group, offset):
@@ -44,9 +45,15 @@ class VkLoader(AbstractLoader):
                 'offset': offset,
                 'filter': 'all',
                 'version': '5.52',
+                'access_token': self._token,
             }
         )
-        return r.json()[u'response'][1:]
+        try:
+            resp = r.json()[u'response'][1:]
+        except:
+            print >> sys.stderr, r.json()
+            raise
+        return resp
 
     def _parse_post_data(self, m, group):
         attachments = []
@@ -90,7 +97,12 @@ class FbLoader(AbstractLoader):
                 'access_token': self._token,
             }
         )
-        return r.json()['data']
+        try:
+            resp = r.json()['data']
+        except:
+            print >> sys.stderr, r.json()
+            raise
+        return resp
 
     def _parse_post_data(self, m, group):
         group_id, post_id = m['id'].split('_')
@@ -108,7 +120,7 @@ class FbLoader(AbstractLoader):
 class PostsLoader(object):
     def __init__(self, data_folder, count):
         self._count = count
-        self._vk = VkLoader(count)
+        self._vk = VkLoader(open('{}/vk_token'.format(data_folder)).read().rstrip(), count)
         self._fb = FbLoader(open('{}/fb_token'.format(data_folder)).read().rstrip(), count)
 
     def get(self, g, pages=1):
